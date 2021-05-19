@@ -5,13 +5,13 @@ const movieSchema = new mongoose.Schema({
     type: String,
     title: String,
     director: String,
-    cast: String,
+    cast: Array,
     country: String,
     date_added: String,
-    release_year: String,
+    release_year: Number,
     rating: String,
     duration: String,
-    listed_in: String,
+    listed_in: Array,
     description: String
 })
 
