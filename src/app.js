@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
 const db = require('./db/mongoose')
-const Movie = require('./models/movie')
+const Title = require('./models/movie')
 
 db.connect()
 
@@ -23,8 +23,7 @@ app.get('/', (req, res) => {
 
 app.post('/movie/:title', async (req, res) => {
     const title = req.params.title
-    //console.log(title)
-    const result = await Movie.aggregate([
+    const result = await Title.aggregate([
         {$match: {
             $and: [{type: 'Movie'}, {title: title}]
         }},
@@ -37,15 +36,13 @@ app.post('/movie/:title', async (req, res) => {
             release_year: 1
         }}
     ])
-    //console.log(result)
 
     res.send(result)
 })
 
 app.post('/tvshow/:title', async (req, res) => {
     const title = req.params.title
-    //console.log(title)
-    const result = await Movie.aggregate([
+    const result = await Title.aggregate([
         {$match: {
             $and: [{type: 'TV Show'}, {title: title}]
         }},
@@ -58,43 +55,52 @@ app.post('/tvshow/:title', async (req, res) => {
             release_year: 1
         }}
     ])
-    //console.log(result)
 
     res.send(result)
 })
 
 app.post('/actor/:actor', async (req, res) => {
     const actor = req.params.actor
-    //console.log(title)
-    const result = await Movie.aggregate([
-        //Query
+    const result = await Title.aggregate([
+        {$unwind: "$cast"},
+        {$match: {
+            $and: [{type: 'TV Show'}, {cast: actor}]
+        }},
+        {$project: {
+            _id: 0,
+            title: 1,
+            director: 1,
+            country: 1,
+            release_year: 1
+        }}
     ])
-    //console.log(result)
 
     res.send(result)
 })
 
 app.post('/country/:country', async (req, res) => {
     const country = req.params.country
-    const count = await Movie.find({$and: [{type: 'Movie'}, {country: country}]}).countDocuments()
+    const count = await Title.find({$and: [{type: 'Movie'}, {country: country}]}).countDocuments()
     const result = {
         "count": count
     }
+
     res.send(result)
 })
 
 app.post('/year/:year', async (req, res) => {
     const year = req.params.year
-    const count = await Movie.find({$and: [{type: 'TV Show'}, {release_year: year}]}).countDocuments()
+    const count = await Title.find({$and: [{type: 'TV Show'}, {release_year: year}]}).countDocuments()
     const result = {
         "count": count
     }
+
     res.send(result)
 })
 
 
 app.get('/total-count', async (req, res) => {
-    const count = await Movie.countDocuments()
+    const count = await Title.countDocuments()
 
     const result = {
         "count": count

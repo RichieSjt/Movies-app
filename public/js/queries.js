@@ -15,9 +15,19 @@ db.titles.aggregate([
 ]);
 
 // Given an actor name - Obtain a list with the movies and a list with the TV shows where he/she has participated
-var searchActor = 'Oscar Serrano';
+var actor = "June Diane Raphael";
 db.titles.aggregate([
-    //Chale creo que si vamos a necesitar separlos en array para hacer esto
+  {$unwind: "$cast"},
+  {$match: {
+      $and: [{type: 'TV Show'}, {cast: actor}]
+  }},
+  {$project: {
+      _id: 0,
+      title: 1,
+      director: 1,
+      country: 1,
+      release_year: 1
+  }}
 ]);
 
 // Given a TV show name - Obtain the director, cast, countries and release year
