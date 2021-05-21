@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const MONGODB_URL = "mongodb://127.0.0.1:27017/netflix_db"
+const MONGODB_URL = "mongodb+srv://pedrorangelp:2X2MwifJC5HvvtFp@mongodb-cluster.u0629.mongodb.net/netflix_db"
 
 const connect = async () => {
     try {
