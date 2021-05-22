@@ -18,9 +18,7 @@ db.titles.aggregate([
 var actor = "June Diane Raphael";
 db.titles.aggregate([
   {$unwind: "$cast"},
-  {$match: {
-      $and: [{type: 'TV Show'}, {cast: actor}]
-  }},
+  {$match: {cast: actor}},
   {$project: {
       _id: 0,
       title: 1,

@@ -33,7 +33,11 @@ app.post('/movie/:title', async (req, res) => {
             director: 1,
             cast: 1,
             country: 1,
-            release_year: 1
+            release_year: 1,
+            rating: 1,
+            listed_in: 1,
+            description: 1,
+            type: 1
         }}
     ])
 
@@ -52,7 +56,11 @@ app.post('/tvshow/:title', async (req, res) => {
             director: 1,
             cast: 1,
             country: 1,
-            release_year: 1
+            release_year: 1,
+            rating: 1,
+            listed_in: 1,
+            description: 1,
+            type: 1
         }}
     ])
 
@@ -63,15 +71,17 @@ app.post('/actor/:actor', async (req, res) => {
     const actor = req.params.actor
     const result = await Title.aggregate([
         {$unwind: "$cast"},
-        {$match: {
-            $and: [{type: 'TV Show'}, {cast: actor}]
-        }},
+        {$match: {cast: actor}},
         {$project: {
             _id: 0,
             title: 1,
             director: 1,
             country: 1,
-            release_year: 1
+            release_year: 1,
+            rating: 1,
+            listed_in: 1,
+            description: 1,
+            type: 1
         }}
     ])
 
